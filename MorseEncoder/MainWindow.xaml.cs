@@ -23,6 +23,19 @@ namespace MorseEncoder
         public MainWindow()
         {
             InitializeComponent();
+            this.ViewModel = new MainWindowViewModel();
+        }
+
+        public MainWindowViewModel ViewModel
+        {
+            get
+            {
+                return this.DataContext as MainWindowViewModel;
+            }
+            private set
+            {
+                this.DataContext = value;
+            }
         }
     }
 }

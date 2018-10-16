@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MorseEncoder"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="GBK摩斯编解码" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="25" HorizontalAlignment="Center" Text="明文："/>
+        <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding PlainText,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="25" HorizontalAlignment="Center" Text="GBK："/>
+        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Text="{Binding GBKText}" IsReadOnly="True"></TextBox>
+        <TextBlock Grid.Row="2" Grid.Column="0" FontSize="25" HorizontalAlignment="Center" Text="摩斯码："/>
+        <TextBox Grid.Row="2" Grid.Column="1" TextWrapping="Wrap"  Text="{Binding MorseText,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Width="70" Height="30" FontSize="20" Content="加密" Command="{Binding CmdEncrypt}"/>
+            <Button Margin="10,0,0,0" Width="70" Height="30" FontSize="20" Content="解密" Command="{Binding CmdDecrypt}"/>
+        </StackPanel>
     </Grid>
 </Window>
