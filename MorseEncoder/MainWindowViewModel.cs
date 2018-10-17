@@ -85,6 +85,8 @@ namespace MorseEncoder
 
         private void Encrypt()
         {
+            this.GBKText = string.Empty;
+            this.MorseText = string.Empty;
             StringBuilder sbGBKCodes = new StringBuilder();
             StringBuilder sbMorse = new StringBuilder();
             var words = this.PlainText.ToArray();
@@ -94,9 +96,9 @@ namespace MorseEncoder
                 if (Regex.IsMatch(symbol, "[\u4e00-\u9fa5]"))
                 {
                     var gbkResult = GBKHelper.ChineseToCoding(symbol);
-                    sbGBKCodes.Append(gbkResult).Append("/");
+                    sbGBKCodes.AppendFormat("/{0}/", gbkResult);
                     var morseResult = MorseHelper.GBK2Morse(gbkResult);
-                    sbMorse.Append(morseResult).Append("/   ");
+                    sbMorse.AppendFormat("/     {0}/", morseResult);
                 }
                 else
                 {
@@ -105,13 +107,37 @@ namespace MorseEncoder
                 }
             }
 
-            this.GBKText = sbGBKCodes.ToString();
-            this.MorseText = sbMorse.ToString();
+            this.GBKText = sbGBKCodes.Replace("//", "/").ToString();
+            this.MorseText = sbMorse.Replace("//", "/").ToString();
         }
 
         private void Decrypt()
         {
+            this.PlainText = string.Empty;
+            this.GBKText = string.Empty;
+            StringBuilder sbPlainText = new StringBuilder();
+            StringBuilder sbGBKCodes = new StringBuilder();
+            var noEmptyMorseCodes = this.MorseText.Replace(" ", "");
+            var morseCodes = noEmptyMorseCodes.Split(new char[] { '/'}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var morseCode in morseCodes)
+            {
+                if (Regex.IsMatch(morseCode, "^[—·]+$"))
+                {
+                    var gbkResult = MorseHelper.Morse2GBK(morseCode);
+                    sbGBKCodes.AppendFormat("/{0}/", gbkResult);
 
+                    var plainResult = GBKHelper.CodingToChinese(gbkResult);
+                    sbPlainText.AppendFormat("/{0}/", plainResult);
+                }
+                else
+                {
+                    sbGBKCodes.Append(morseCode);
+                    sbPlainText.Append(morseCode);
+                }
+            }
+
+            this.PlainText = sbPlainText.Replace("/", "").ToString();
+            this.GBKText = sbGBKCodes.Replace("//", "/").ToString();
         }
 
         #endregion
